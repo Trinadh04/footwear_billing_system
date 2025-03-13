@@ -1,0 +1,14 @@
+          PREMIERE SHOE COMPANY
+          Date: 2025-01-07 22:28:53
+Bill Number: 677d5d4d03b84d8b5c31b6d0
+
+Total Amount: 299.0
+Discount: 0%
+Final Amount: 299.0
+
+Items:
+Product	QTY	Price
+--------------------------------------------------
+walkaroo	1	299.0
+--------------------------------------------------
+Total: 299.0

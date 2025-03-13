@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Bill</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .bill-container {
+            width: 80%;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .company-header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #007BFF;
+        }
+
+        .company-header p {
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        .bill-details {
+            margin-top: 20px;
+        }
+
+        .bill-details h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .bill-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .bill-details table th,
+        .bill-details table td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .bill-summary {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .bill-summary p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .print-button {
+            display: none; /* Hidden when printed */
+        }
+
+        @media print {
+            .print-button {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-container">
+        <!-- Company Header -->
+        <div class="company-header">
+            <h1>PREMIERE SHOE COMPANY</h1>
+            <p>Avanigadda, Challapalli</p>
+            <p>Contact: 9704112468</p>
+            <p>GST :ABCDEF </p>
+        </div>
+
+        <!-- Bill Details -->
+        <div class="bill-details">
+            <h3>Bill Details</h3>
+            <p><strong>Bill ID:</strong> {{ bill_data['_id'] }}</p>
+            <p><strong>Date:</strong> {{ bill_data['date'] }}</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in bill_data['details'] %}
+                    <tr>
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['quantity'] }}</td>
+                        <td>₹{{ item['price'] / item['quantity'] }}</td>
+                        <td>₹{{ item['price'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bill Summary -->
+<div class="bill-summary">
+    <p><strong>Subtotal:</strong> ₹{{ bill_data['total_amount'] }}</p>
+
+    <!-- Discount Section -->
+    <p><strong>Discount:</strong> ₹{{ bill_data['discount'] }}</p>
+
+    <p><strong>Total Amount:</strong> <strong>₹{{ bill_data['final_amount'] }}</strong></p>
+</div>
+
+<!-- Print Button -->
+<div class="print-button">
+    <button onclick="window.print()">Print Bill</button>
+</div>
+</body>
+</html>

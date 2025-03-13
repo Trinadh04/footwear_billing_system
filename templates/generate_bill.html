@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-center">Generate Bill</h1>
+<form method="POST" action="{{ url_for('generate_bill') }}" id="bill-form">
+    <div id="product-container">
+        <!-- First product input group -->
+        <div class="product-group mb-3">
+            <label for="product" class="form-label">Select Product</label>
+            <select name="product" class="form-select product-select">
+                {% for product in products %}
+                <option value="{{ product['_id'] }}">{{ product['name'] }} - ₹{{ product['price'] }}</option>
+                {% endfor %}
+            </select>
+            <label for="quantity" class="form-label mt-2">Quantity</label>
+            <input type="number" class="form-control quantity-input" name="quantity" value="1" required>
+        </div>
+    </div>
+
+    <!-- Add More Products Button -->
+    <button type="button" class="btn btn-secondary mb-3" id="add-product-btn">Add More Products</button>
+
+    <!-- Discount Percentage -->
+    <div class="mb-3">
+        <label for="discount" class="form-label">Discount (%)</label>
+        <input type="number" class="form-control" id="discount" name="discount" value="0" min="0" max="100">
+    </div>
+
+    <!-- Payment Type Selection -->
+    <div class="mb-3">
+        <label class="form-label">Select Payment Type</label>
+        <div class="payment-options">
+            <input type="radio" id="payment-upi" name="payment_type" value="UPI" checked>
+            <label for="payment-upi">UPI</label>
+            <input type="radio" id="payment-cash" name="payment_type" value="Cash">
+            <label for="payment-cash">Cash</label>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="button" class="btn btn-primary" onclick="generateBill()">Print Bill</button>
+</form>
+
+<script>
+document.getElementById("add-product-btn").addEventListener("click", function() {
+    // Create a new product input group
+    var productGroup = document.createElement("div");
+    productGroup.className = "product-group mb-3";
+
+    productGroup.innerHTML = `
+        <label for="product" class="form-label">Select Product</label>
+        <select name="product" class="form-select product-select">
+            {% for product in products %}
+            <option value="{{ product['_id'] }}">{{ product['name'] }} - ₹{{ product['price'] }}</option>
+            {% endfor %}
+        </select>
+        <label for="quantity" class="form-label mt-2">Quantity</label>
+        <input type="number" class="form-control quantity-input" name="quantity" value="1" required>
+    `;
+
+    // Append the new product group to the container
+    document.getElementById("product-container").appendChild(productGroup);
+});
+
+function generateBill() {
+    // Collect all products and quantities
+    var productGroups = document.querySelectorAll(".product-group");
+    
+    var products = Array.from(productGroups).map(group => {
+        var productId = group.querySelector(".product-select").value;
+        var quantity = group.querySelector(".quantity-input").value;
+        return { product_id: productId, quantity: quantity };
+    });
+
+    // Get selected payment type
+    var paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+
+    // Get discount percentage
+    var discount = parseFloat(document.getElementById("discount").value);
+
+    // Prepare data to send
+    var data = {
+        products: products,
+        payment_type: paymentType,
+        discount: discount
+    };
+
+    fetch('/bill', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Redirect to generate PDF route
+            window.location.href = `/bill/pdf/${data.bill_data._id}`;
+        } else {
+            alert("Error generating bill");
+        }
+    });
+}
+</script>
+
+<style>
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Heading */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Form Container */
+#bill-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Product Input Group */
+.product-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-group .form-label {
+    margin-bottom: 5px;
+}
+
+.product-group .form-select,
+.product-group .quantity-input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.product-group .quantity-input {
+    max-width: 100px;
+}
+
+/* Add More Products Button */
+#add-product-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#add-product-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Discount Field */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+/* Payment Type Radio Buttons */
+.payment-options input {
+    margin-right: 10px;
+}
+
+.payment-options label {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Submit Button */
+.btn-primary {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    #bill-form {
+        padding: 20px;
+    }
+
+    .product-group {
+        flex-direction: column;
+    }
+
+    .product-group .quantity-input {
+        max-width: 80px;
+    }
+
+    .btn-primary {
+        padding: 10px 15px;
+    }
+
+    #add-product-btn {
+        padding: 8px 16px;
+    }
+}
+</style>
+
+{% endblock %}

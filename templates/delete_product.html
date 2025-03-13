@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center">Delete Product</h1>
+
+{% if products %}
+    <div class="list-group">
+        {% for product in products %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ product['name'] }}</strong><br>
+                    <span>Size: {{ product['size'] }}</span><br>
+                    <span>Price: ${{ product['price'] }}</span><br>
+                    <span>Stock: {{ product['stock'] }}</span>
+                </div>
+                <form action="{{ url_for('delete_product', product_id=product['_id']) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No products available to delete.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Total Cash Payments</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        h5,
+        h6 {
+            color: #444;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input[type="date"],
+        input[type="month"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        input[type="date"]:focus,
+        input[type="month"]:focus,
+        input[type="number"]:focus {
+            border-color: #009688;
+            outline: none;
+            background-color: #e0f7fa;
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: #009688;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #00796b;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #009688;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Links */
+        a {
+            text-decoration: none;
+            color: #009688;
+            font-size: 16px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #00796b;
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            background-color: #ff5722;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flash-message.success {
+            background-color: #4caf50;
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            button {
+                padding: 10px 15px;
+            }
+
+            table th, table td {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h5 class="card-title">Cash Payments</h5>
+        <form action="/payments/cash" method="POST">
+            <div class="form-group">
+                <label for="cash_date">Enter Date:</label>
+                <input type="date" class="form-control" id="cash_date" name="cash_date">
+            </div>
+            <div class="form-group">
+                <label for="cash_month">Enter Month:</label>
+                <input type="month" class="form-control" id="cash_month" name="cash_month">
+            </div>
+            <div class="form-group">
+                <label for="cash_year">Enter Year:</label>
+                <input type="number" class="form-control" id="cash_year" name="cash_year" placeholder="YYYY">
+            </div>
+            <button type="submit" class="btn btn-primary">View Total Cash Payments</button>
+        </form>
+
+        {% if cash_payments %}
+        <h6>Total Cash Payments: ₹{{ cash_total }}</h6>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in cash_payments %}
+                <tr>
+                    <td>{{ payment.date }}</td>
+                    <td>{{ payment.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No payments found for the selected period.</p>
+        {% endif %}
+
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </div>
+</body>
+
+</html>

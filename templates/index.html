@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premiere Shoe Mart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 50px;
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        h5.card-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
+        .btn {
+            font-size: 16px;
+            padding: 12px 20px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Grid Layout */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin: 0 20px;
+        }
+
+        /* Adjusted Columns */
+        .col-md-4, .col-md-6 {
+            width: 48%; /* Ensures equal column width */
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-control {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Payments Section */
+        .payments-section ul {
+            list-style-type: none;
+            padding-left: 0;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .payments-section li {
+            margin: 5px 0;
+        }
+
+        .payments-section h6 {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        /* Footer Section */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .col-md-4, .col-md-6 {
+                width: 100%;
+            }
+
+            .row {
+                justify-content: center;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 15px;
+                margin-top: 10px;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Premiere Shoe Mart</h1>
+
+<div class="row mt-4">
+    <!-- Manage Products Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Manage Products</h5>
+                <a href="/product/add" class="btn btn-primary mb-3">Add Product</a>
+                <a href="/product" class="btn btn-secondary">Delete Products</a> <!-- Link to manage products page -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Bill Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Generate Bill</h5>
+                <a href="/bill" class="btn btn-primary">Create Bill</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Sales Report Section -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">View Sales Report</h5>
+                <a href="/sales" class="btn btn-primary">View Report</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- UPI Payments Section -->
+    <div class="col-md-4"> <!-- Adjusted column width to match "Manage Products" -->
+        <div class="card">
+            <div class="card-body payments-section">
+                <h5 class="card-title">UPI Payments</h5>
+                <form action="/payments/upi" method="POST">
+                    <div class="form-group">
+                        <label for="upi_date">Enter Date:</label>
+                        <input type="date" class="form-control" id="upi_date" name="upi_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="upi_month">Enter Month:</label>
+                        <input type="month" class="form-control" id="upi_month" name="upi_month">
+                    </div>
+                    <div class="form-group">
+                        <label for="upi_year">Enter Year:</label>
+                        <input type="number" class="form-control" id="upi_year" name="upi_year" placeholder="YYYY">
+                    </div>
+                    <button type="submit" class="btn btn-primary">View Total UPI Payments</button>
+                </form>
+                {% if upi_payments %}
+                    <h6>Total UPI Payments: ${{ upi_total }}</h6>
+                    <ul>
+                        {% for payment in upi_payments %}
+                            <li>{{ payment.date }}: ${{ payment.amount }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Cash Payments Section -->
+    <div class="col-md-4"> <!-- Adjusted column width to match "Manage Products" -->
+        <div class="card">
+            <div class="card-body payments-section">
+                <h5 class="card-title">Cash Payments</h5>
+                <form action="/payments/cash" method="POST">
+                    <div class="form-group">
+                        <label for="cash_date">Enter Date:</label>
+                        <input type="date" class="form-control" id="cash_date" name="cash_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="cash_month">Enter Month:</label>
+                        <input type="month" class="form-control" id="cash_month" name="cash_month">
+                    </div>
+                    <div class="form-group">
+                        <label for="cash_year">Enter Year:</label>
+                        <input type="number" class="form-control" id="cash_year" name="cash_year" placeholder="YYYY">
+                    </div>
+                    <button type="submit" class="btn btn-primary">View Total Cash Payments</button>
+                </form>
+                {% if cash_payments %}
+                    <h6>Total Cash Payments: ${{ cash_total }}</h6>
+                    <ul>
+                        {% for payment in cash_payments %}
+                            <li>{{ payment.date }}: ${{ payment.amount }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Total Stock Section -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Stock</h5>
+                <a href="/stock" class="btn btn-primary">View Total Stock</a> <!-- Link to view total stock -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+</body>
+</html>
