@@ -306,9 +306,9 @@ def get_cash_payments(date=None, month=None, year=None):
 
 # Run the App
 if __name__ == "__main__":
-    if not users_col.find_one({"username": "admin"}):
+    if not users_col.find_one({"username": "9573680488"}):
         users_col.insert_one({
-            "username": "admin",
-            "password": bcrypt.generate_password_hash("admin").decode("utf-8")
+            "username": "9573680488",
+            "password": bcrypt.generate_password_hash("9704112468").decode("utf-8")
         })
     app.run(debug=True)
